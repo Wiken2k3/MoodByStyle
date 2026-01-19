@@ -1,25 +1,32 @@
 import { ReactNode } from 'react';
 import { Sidebar } from './Sidebar';
-import { Player } from './Player';
+import { TopBar } from './TopBar';
+import { PlayerBar } from './PlayerBar';
 
-interface AppShellProps {
-  children: ReactNode;
-}
-
-export function AppShell({ children }: AppShellProps) {
+export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="grid h-screen grid-rows-[1fr_auto] bg-background-primary">
-      {/* Top */}
-      <div className="grid grid-cols-[280px_1fr] overflow-hidden">
+    <div className="flex h-screen w-screen flex-col bg-black">
+      {/* Main layout */}
+      <div className="flex flex-1 overflow-hidden gap-2 p-2">
+        {/* Sidebar */}
         <Sidebar />
 
-        <main className="overflow-y-auto bg-background-secondary p-10">
-          {children}
-        </main>
+        {/* Main content area */}
+        <div className="flex flex-1 flex-col overflow-hidden rounded-lg bg-background-primary">
+          {/* TopBar (sticky) */}
+          <div className="sticky top-0 z-30 bg-background-primary/80 backdrop-blur">
+            <TopBar />
+          </div>
+
+          {/* Scrollable content */}
+          <main className="flex-1 overflow-y-auto px-10 py-8 pb-24">
+            {children}
+          </main>
+        </div>
       </div>
 
-      {/* Bottom */}
-      <Player />
+      {/* Player bar */}
+      <PlayerBar />
     </div>
   );
 }

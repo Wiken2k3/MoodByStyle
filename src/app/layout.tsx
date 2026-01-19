@@ -25,8 +25,27 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <AppShell>{children}</AppShell>
+      <body
+        className={`
+          ${geistSans.variable}
+          ${geistMono.variable}
+          antialiased
+          bg-black
+          text-text-body
+        `}
+      >
+        <AppShell>
+          <main
+            className="
+              h-full
+              overflow-y-auto
+              rounded-3xl
+              bg-background-primary
+            "
+          >
+            {children}
+          </main>
+        </AppShell>
       </body>
     </html>
   );

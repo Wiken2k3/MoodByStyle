@@ -7,28 +7,56 @@ CSS VARIABLES (THEME)
 ===================== */
 
 :root {
---bg-primary: #ffffff;
---bg-secondary: #f9fafb;
---bg-tertiary: #f3f4f6;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
 
---text-heading: #171717;
---text-body: #404040;
---text-muted: #737373;
+  --text-heading: #171717;
+  --text-body: #404040;
+  --text-muted: #737373;
 }
 
 .dark {
---bg-primary: #0b0b0b;
---bg-secondary: #181818;
---bg-tertiary: #242424;
+  --bg-primary: #0b0b0b;
+  --bg-secondary: #181818;
+  --bg-tertiary: #242424;
 
---text-heading: #fafafa;
---text-body: #d4d4d4;
---text-muted: #a3a3a3;
+  --text-heading: #fafafa;
+  --text-body: #d4d4d4;
+  --text-muted: #a3a3a3;
 }
+
+/* =====================
+GLOBAL POLISH
+===================== */
+
+/* Firefox scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #404040 transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
 }
+
+/* Spotify-like scrollbar (WebKit) */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Card hover lift (Spotify feel) */
 .card-hover {
   transition: transform 0.2s ease;
 }
@@ -37,19 +65,25 @@ CSS VARIABLES (THEME)
   transform: translateY(-4px);
 }
 
-
-
 /* =====================
 BASE STYLES
 ===================== */
 
 html,
 body {
-height: 100%;
+  height: 100%;
 }
 
 body {
-background-color: var(--bg-primary);
-color: var(--text-body);
-@apply antialiased;
+  /* 🔥 Spotify-style layered background */
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.6) 0%,
+      #121212 300px
+    ),
+    var(--bg-primary);
+
+  color: var(--text-body);
+  @apply antialiased;
 }

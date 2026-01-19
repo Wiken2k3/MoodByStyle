@@ -1,29 +1,35 @@
-import { Button } from '@/components/ui/Button';
+import { HomeHeader } from '@/components/home/HomeHeader';
 import { Card } from '@/components/ui/Card';
-import { SectionTitle } from '@/components/ui/SectionTitle';
+import { Section } from '@/components/ui/Section';
 
 export default function HomePage() {
   return (
-    <div className="space-y-10">
-      <section>
-        <SectionTitle>Good evening</SectionTitle>
+    <div className="space-y-12">
+      <HomeHeader />
 
-        <p className="mt-2 text-text-muted">
-          Dark mode first. Design token driven.
-        </p>
+      <Section title="Made for you">
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 lg:grid-cols-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Card
+              key={i}
+              title={`Daily Mix ${i + 1}`}
+              description="Based on your recent listening"
+            />
+          ))}
+        </div>
+      </Section>
 
-        <Button className="mt-6">▶ Play Music</Button>
-      </section>
-
-      <section className="grid grid-cols-2 gap-10 md:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Card
-            key={i}
-            title={`Playlist ${i + 1}`}
-            description="Some description for this playlist"
-          />
-        ))}
-      </section>
+      <Section title="Recently played">
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4 lg:grid-cols-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Card
+              key={i}
+              title={`Playlist ${i + 1}`}
+              description="Made for you"
+            />
+          ))}
+        </div>
+      </Section>
     </div>
   );
 }
