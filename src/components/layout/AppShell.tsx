@@ -8,17 +8,17 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   return (
-    <div className="h-screen grid grid-rows-[1fr_auto] bg-background-primary">
-      {/* Top area */}
+    <div className="grid h-screen grid-rows-[1fr_auto] bg-background-primary">
+      {/* Top */}
       <div className="grid grid-cols-[280px_1fr] overflow-hidden">
         <Sidebar />
 
-        <main className="overflow-y-auto bg-background-secondary p-6">
+        <main className="overflow-y-auto bg-background-secondary p-10">
           {children}
         </main>
       </div>
 
-      {/* Bottom Player */}
+      {/* Bottom */}
       <Player />
     </div>
   );

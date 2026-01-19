@@ -6,13 +6,13 @@ export function Sidebar() {
       </h2>
 
       <nav className="flex flex-col gap-3 text-sm">
-        <button className="text-left hover:text-white transition">
+        <button className="text-left transition hover:text-white">
           🏠 Home
         </button>
-        <button className="text-left hover:text-white transition">
+        <button className="text-left transition hover:text-white">
           🔍 Search
         </button>
-        <button className="text-left hover:text-white transition">
+        <button className="text-left transition hover:text-white">
           🎵 Your Playlists
         </button>
       </nav>

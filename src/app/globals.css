@@ -25,6 +25,19 @@ CSS VARIABLES (THEME)
 --text-body: #d4d4d4;
 --text-muted: #a3a3a3;
 }
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #404040 transparent;
+}
+.card-hover {
+  transition: transform 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+}
+
+
 
 /* =====================
 BASE STYLES

@@ -1,17 +1,29 @@
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { SectionTitle } from '@/components/ui/SectionTitle';
+
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background-primary text-text-body p-8">
-      <h1 className="text-4xl font-bold text-text-heading">
-        Spotify Clone 🎧
-      </h1>
+    <div className="space-y-10">
+      <section>
+        <SectionTitle>Good evening</SectionTitle>
 
-      <p className="mt-4 text-text-muted">
-        Dark mode first. Design token driven.
-      </p>
+        <p className="mt-2 text-text-muted">
+          Dark mode first. Design token driven.
+        </p>
 
-      <button className="mt-6 rounded-full bg-brand-primary-500 px-6 py-3 font-semibold text-black hover:scale-105 transition">
-        Play Music
-      </button>
+        <Button className="mt-6">▶ Play Music</Button>
+      </section>
+
+      <section className="grid grid-cols-2 gap-10 md:grid-cols-3">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Card
+            key={i}
+            title={`Playlist ${i + 1}`}
+            description="Some description for this playlist"
+          />
+        ))}
+      </section>
     </div>
   );
 }

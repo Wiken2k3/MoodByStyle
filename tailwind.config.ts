@@ -5,6 +5,7 @@ const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
+      /* 🎨 COLORS (CSS VARIABLE DRIVEN) */
       colors: {
         background: {
           primary: 'var(--bg-primary)',
@@ -17,6 +18,7 @@ const config: Config = {
           muted: 'var(--text-muted)',
         },
         neutral: {
+          700: '#404040',
           800: '#262626',
         },
         brand: {
@@ -24,6 +26,20 @@ const config: Config = {
             500: '#22c55e',
           },
         },
+      },
+
+      /* 📐 SPACING – 40PX SYSTEM */
+      spacing: {
+        10: '40px',
+        11: '44px',
+      },
+
+      /* 🔵 RADIUS – SOFT & MODERN */
+      borderRadius: {
+        xl: '12px',
+        '2xl': '16px',
+        '3xl': '20px',
+        full: '9999px',
       },
     },
   },
