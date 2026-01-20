@@ -13,6 +13,13 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    rules: {
+      "@next/next/no-inline-styles": "warn",
+      "jsx-a11y/anchor-is-valid": "warn",
+      "jsx-a11y/click-events-have-key-events": "warn",
+    },
+  },
 ]);
 
 export default eslintConfig;

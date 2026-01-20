@@ -2,6 +2,7 @@
 
 import { Play } from 'lucide-react';
 import { usePlayerStore } from '@/store/usePlayerStore';
+import { PLAYLISTS } from '@/constants/albums';
 
 export default function PlaylistPage() {
   const playTrack = usePlayerStore((s) => s.playTrack);
@@ -11,6 +12,7 @@ export default function PlaylistPage() {
     title: `Track title ${i + 1}`,
     artist: 'Artist name',
     duration: '3:45',
+    src: '/audio/cptdsddt.mp3',
   }));
 
   const playPlaylist = () => {
@@ -107,12 +109,7 @@ export default function PlaylistPage() {
    TRACK ROW
 ===================== */
 
-interface Track {
-  id: string;
-  title: string;
-  artist: string;
-  duration: string;
-}
+import type { Track } from '@/store/usePlayerStore';
 
 function TrackRow({
   index,

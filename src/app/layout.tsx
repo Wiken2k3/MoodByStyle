@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import { AppShell } from '@/components/layout/AppShell';
+import { AppShell } from '@/app/layout/AppShell';
+import { SplashScreen } from '@/components/SplashScreen';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -24,27 +25,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark scroll-smooth">
       <body
+        suppressHydrationWarning
         className={`
           ${geistSans.variable}
           ${geistMono.variable}
           antialiased
           bg-black
           text-text-body
+          overflow-hidden
         `}
       >
+        <SplashScreen />
         <AppShell>
-          <main
-            className="
-              h-full
-              overflow-y-auto
-              rounded-3xl
-              bg-background-primary
-            "
-          >
-            {children}
-          </main>
+          {children}
         </AppShell>
       </body>
     </html>
