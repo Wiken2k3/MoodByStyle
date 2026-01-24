@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MoodByStyle 🎵
 
-## Getting Started
+**MoodByStyle** là một ứng dụng nghe nhạc trực tuyến hiện đại, được xây dựng với giao diện lấy cảm hứng từ Spotify, sử dụng sức mạnh của **Next.js 14**, **TypeScript** và **Tailwind CSS**. Dự án tập trung vào trải nghiệm người dùng mượt mà, giao diện đẹp mắt (Glassmorphism) và khả năng tương thích đa nền tảng.
 
-First, run the development server:
+## ✨ Tính Năng Nổi Bật
 
+### 🎧 Trình Phát Nhạc (Music Player)
+- **Điều khiển toàn diện**: Play, Pause, Next, Previous.
+- **Chế độ phát**: Shuffle (Trộn bài), Repeat (Lặp lại 1 bài/tất cả).
+- **Thanh tiến trình**: Kéo thả để tua nhạc (Seek) mượt mà.
+- **Âm lượng**: Điều chỉnh âm lượng trực quan.
+- **Queue System**: Xem và quản lý danh sách bài hát đang chờ phát (Right Sidebar).
+
+### 👤 Quản Lý Người Dùng & Phân Quyền
+- **Guest Mode**: Cho phép trải nghiệm nghe nhạc, tìm kiếm mà không cần đăng nhập.
+- **User Mode**: Đăng nhập để mở khóa các tính năng cá nhân hóa.
+- **Restricted Actions**: Hệ thống tự động nhắc nhở đăng nhập khi khách thực hiện các hành động như "Thả tim", "Tạo Playlist".
+- **Profile**: Trang cá nhân hiển thị thông tin người dùng và các playlist công khai.
+
+### 📱 Giao Diện & UX
+- **Responsive Design**: Tương thích hoàn hảo trên Desktop, Tablet và Mobile.
+- **Mobile Navigation**: Thanh điều hướng tối ưu cho thiết bị di động.
+- **Animations**: Hiệu ứng chuyển cảnh, loading (Splash Screen), và tương tác mượt mà.
+- **Search**: Tìm kiếm bài hát và nghệ sĩ theo thời gian thực.
+- **Library**: Quản lý bài hát yêu thích và playlist cá nhân.
+
+## 🛠️ Công Nghệ Sử Dụng
+
+- **Core**: [Next.js 14](https://nextjs.org/) (App Router), [React](https://react.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand) (Quản lý Auth & Player state)
+- **Fonts**: [Geist](https://vercel.com/font)
+
+## 🚀 Cài Đặt & Chạy Dự Án
+
+Làm theo các bước sau để chạy dự án trên máy local của bạn:
+
+### 1. Clone Repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/username/moodbystyle.git
+cd moodbystyle
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Cài Đặt Dependencies
+```bash
+npm install
+# hoặc
+yarn install
+# hoặc
+pnpm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Cấu Hình Dữ Liệu (Tùy chọn)
+Dự án sử dụng file tĩnh cho nhạc và ảnh.
+- Tham khảo file `ALBUM_GUIDE.md` trong thư mục gốc để biết cách thêm album và bài hát mới vào thư mục `public/`.
+- Dữ liệu mẫu được cấu hình tại `src/constants/albums.ts`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Chạy Server Development
+```bash
+npm run dev
+```
 
-## Learn More
+Mở trình duyệt và truy cập http://localhost:3000.
 
-To learn more about Next.js, take a look at the following resources:
+## 📂 Cấu Trúc Thư Mục
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── app/                 # Next.js App Router pages (Home, Search, Library...)
+├── components/          # React components
+│   ├── home/            # Components cho trang chủ (Header, Sections)
+│   ├── layout/          # Layout chính (Sidebar, TopBar, PlayerBar...)
+│   ├── player/          # Các thành phần của trình phát nhạc & Queue
+│   ├── ui/              # Reusable UI components (Card, Button...)
+│   └── modals/          # Các modal (LoginRequired...)
+├── constants/           # Dữ liệu tĩnh (Albums, Tracks mock data)
+├── store/               # Zustand stores (useAuthStore, usePlayerStore)
+└── types/               # TypeScript definitions
+public/
+├── audio/               # Files nhạc (.mp3)
+└── images/              # Ảnh albums, avatars
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🤝 Đóng Góp (Contributing)
 
-## Deploy on Vercel
+Mọi đóng góp đều được hoan nghênh! Nếu bạn muốn cải thiện dự án:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Fork dự án.
+2. Tạo branch tính năng mới (`git checkout -b feature/AmazingFeature`).
+3. Commit thay đổi của bạn (`git commit -m 'Add some AmazingFeature'`).
+4. Push lên branch (`git push origin feature/AmazingFeature`).
+5. Mở một Pull Request.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+*Được phát triển bởi MoodByStyle Team*
