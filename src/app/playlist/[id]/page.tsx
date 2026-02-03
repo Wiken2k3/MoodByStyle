@@ -1,166 +1,48 @@
 'use client';
 
-import { Play } from 'lucide-react';
-import { usePlayerStore } from '@/store/usePlayerStore';
-import { PLAYLISTS } from '@/constants/albums';
+import { useParams } from 'next/navigation';
+import { Play, Music } from 'lucide-react';
 
 export default function PlaylistPage() {
-  const playTrack = usePlayerStore((s) => s.playTrack);
-
-  const tracks = Array.from({ length: 10 }).map((_, i) => ({
-    id: `track-${i + 1}`,
-    title: `Track title ${i + 1}`,
-    artist: 'Artist name',
-    duration: '3:45',
-    src: '/audio/cptdsddt.mp3',
-  }));
-
-  const playPlaylist = () => {
-    playTrack(tracks[0]);
-  };
+  const params = useParams();
+  const id = params.id as string;
+  
+  // Format ID for display (e.g., "chill-hits" -> "Chill Hits")
+  const title = id ? id.replace(/-/g, ' ') : 'Playlist';
 
   return (
-    <div className="space-y-10">
-      {/* =====================
-          PLAYLIST HEADER
-      ===================== */}
-      <header
-        className="
-          -mx-10
-          px-10
-          pb-8
-          pt-16
-          bg-gradient-to-b
-          from-emerald-900/80
-          to-background-primary
-        "
-      >
-        <div className="flex items-end gap-6">
-          {/* Cover */}
-          <div className="h-56 w-56 shrink-0 rounded-lg bg-neutral-800 shadow-2xl" />
-
-          {/* Info */}
-          <div className="space-y-4">
-            <p className="text-sm font-semibold uppercase text-white">
-              Playlist
-            </p>
-
-            <h1 className="text-6xl font-bold tracking-tight text-white">
-              Coding Mode
-            </h1>
-
-            <p className="text-sm text-text-muted">
-              Spotify Clone • {tracks.length} songs
-            </p>
-
-            {/* Actions */}
-            <div className="flex items-center gap-4 pt-4">
-              <button
-                onClick={playPlaylist}
-                className="
-                  flex
-                  h-14
-                  w-14
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-brand-primary-500
-                  text-black
-                  shadow-xl
-                  transition
-                  hover:scale-105
-                  active:scale-95
-                "
-                aria-label="Play playlist"
-              >
-                <Play size={24} fill="black" />
-              </button>
-            </div>
+    <div className="space-y-6 pb-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-end gap-6 bg-gradient-to-b from-neutral-800/50 to-black/50 p-6 -mx-3 sm:-mx-6 md:-mx-8 -mt-4 sm:-mt-6 md:-mt-8 lg:-mt-10">
+        <div className="h-32 w-32 sm:h-52 sm:w-52 shadow-2xl bg-neutral-800 flex items-center justify-center rounded-lg shrink-0 group">
+          <Music size={64} className="text-neutral-500 group-hover:scale-110 transition-transform" />
+        </div>
+        <div className="flex flex-col gap-2 sm:gap-4">
+          <span className="text-xs sm:text-sm font-bold uppercase tracking-wider">Playlist</span>
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black tracking-tighter capitalize">{title}</h1>
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-neutral-300">
+            <span className="font-bold text-white">Spotify</span>
+            <span>•</span>
+            <span>0 likes</span>
+            <span>•</span>
+            <span>0 songs</span>
           </div>
         </div>
-      </header>
-
-      {/* =====================
-          TRACK LIST
-      ===================== */}
-      <section className="space-y-4">
-        {/* Table header */}
-        <div className="grid grid-cols-[40px_1fr_120px] px-4 text-sm text-text-muted">
-          <span>#</span>
-          <span>Title</span>
-          <span className="text-right">Duration</span>
-        </div>
-
-        <div className="space-y-1">
-          {tracks.map((track, i) => (
-            <TrackRow
-              key={track.id}
-              index={i + 1}
-              track={track}
-            />
-          ))}
-        </div>
-      </section>
-    </div>
-  );
-}
-
-/* =====================
-   TRACK ROW
-===================== */
-
-import type { Track } from '@/store/usePlayerStore';
-
-function TrackRow({
-  index,
-  track,
-}: {
-  index: number;
-  track: Track;
-}) {
-  const playTrack = usePlayerStore((s) => s.playTrack);
-
-  return (
-    <div
-      onClick={() => playTrack(track)}
-      className="
-        group
-        grid
-        grid-cols-[40px_1fr_120px]
-        items-center
-        rounded-md
-        px-4
-        py-2
-        text-sm
-        text-text-muted
-        transition
-        hover:bg-white/5
-        hover:text-white
-        cursor-pointer
-      "
-    >
-      {/* Index / Play */}
-      <span className="group-hover:hidden">
-        {index}
-      </span>
-      <span className="hidden group-hover:block text-white">
-        ▶
-      </span>
-
-      {/* Title */}
-      <div>
-        <p className="font-medium text-white">
-          {track.title}
-        </p>
-        <p className="text-xs text-text-muted">
-          {track.artist}
-        </p>
       </div>
 
-      {/* Duration */}
-      <span className="text-right">
-        {track.duration}
-      </span>
+      {/* Actions */}
+      <div className="flex items-center gap-4">
+        <button className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-green-500 hover:bg-green-400 flex items-center justify-center hover:scale-105 transition-all shadow-lg shadow-green-500/20">
+          <Play size={24} fill="black" className="ml-1" />
+        </button>
+      </div>
+      
+      <div className="h-px bg-neutral-800/50" />
+
+      {/* Content Placeholder */}
+      <div className="py-8">
+        <p className="text-neutral-400 text-sm">This playlist is currently empty.</p>
+      </div>
     </div>
   );
 }

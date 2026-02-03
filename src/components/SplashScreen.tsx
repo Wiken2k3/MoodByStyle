@@ -17,7 +17,7 @@ export function SplashScreen() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-gradient-to-br from-black via-neutral-900 to-black">
+    <div suppressHydrationWarning className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-gradient-to-br from-black via-neutral-900 to-black">
       {/* Logo with animation */}
       <div className="relative w-24 h-24 mb-8">
         <div className="absolute inset-0 bg-gradient-to-r from-green-500 to-green-400 rounded-full blur-2xl animate-pulse opacity-75" />

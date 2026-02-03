@@ -35,7 +35,7 @@ export function TrackRow({ track, index, albumArt, playlist }: TrackRowProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="group flex items-center gap-4 rounded-md px-4 py-2 hover:bg-white/10 transition-colors cursor-pointer"
-      onClick={handlePlay}
+      onClick={handlePlay} // Click anywhere to play
     >
       {/* Index / Play Button */}
       <div className="w-8 flex items-center justify-center text-neutral-400 text-sm font-medium">

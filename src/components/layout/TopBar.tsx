@@ -7,6 +7,7 @@ import { usePlayerStore } from '@/store/usePlayerStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export function TopBar() {
   const [scrolled, setScrolled] = useState(false);
@@ -15,6 +16,7 @@ export function TopBar() {
   const playTrack = usePlayerStore((s) => s.playTrack);
   const user = useAuthStore((s) => s.user);
   const isGuest = useAuthStore((s) => s.isGuest);
+  const router = useRouter();
 
   useEffect(() => {
     const onScroll = () => {
@@ -41,6 +43,7 @@ export function TopBar() {
 
   return (
     <div
+      suppressHydrationWarning
       className={`flex items-center justify-between px-3 sm:px-6 md:px-8 py-3 sm:py-4 transition-all duration-500 border-b border-neutral-800/0 gap-2 sm:gap-4 backdrop-blur-md ${
         scrolled
           ? 'bg-black/60 border-green-500/20 shadow-xl shadow-green-500/5 sticky top-0 z-40'
@@ -49,10 +52,10 @@ export function TopBar() {
     >
       {/* Left Navigation */}
       <div className="flex items-center gap-0.5 xs:gap-1 sm:gap-2">
-        <NavButton tooltip="Previous">
+        <NavButton tooltip="Previous" onClick={() => router.back()}>
           <ChevronLeft size={16} className="xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
         </NavButton>
-        <NavButton tooltip="Next">
+        <NavButton tooltip="Next" onClick={() => router.forward()}>
           <ChevronRight size={16} className="xs:w-4 xs:h-4 sm:w-5 sm:h-5" />
         </NavButton>
       </div>
@@ -64,6 +67,12 @@ export function TopBar() {
             type="text"
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+                setSearchResults([]);
+              }
+            }}
             placeholder="Search..."
             className="w-full bg-neutral-800/40 hover:bg-neutral-800/60 text-white placeholder-neutral-500 rounded-full pl-9 xs:pl-10 pr-3 xs:pr-4 py-2 xs:py-2.5 text-xs xs:text-sm transition-all duration-300 focus:outline-none focus:bg-neutral-800 focus:ring-2 focus:ring-green-500/50 backdrop-blur-md border border-white/5 group-focus-within:border-green-500/50"
           />
@@ -122,16 +131,15 @@ export function TopBar() {
 
         {/* User Profile / Guest Badge */}
         {user ? (
-          <Link href="/profile">
-            <button
-              className="flex items-center gap-1.5 xs:gap-2 rounded-full bg-black/60 hover:bg-neutral-900 border border-neutral-700/40 hover:border-green-500/50 px-1.5 xs:px-2 sm:px-3 py-1 xs:py-1.5 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/20 group"
-              title="User profile"
-            >
-              <div className="h-5 xs:h-6 w-5 xs:w-6 rounded-full bg-neutral-700 overflow-hidden relative flex-shrink-0">
-                 {user.avatar && <Image src={user.avatar} alt={user.name} fill className="object-cover" />}
-              </div>
-              <span className="text-[10px] xs:text-xs sm:text-sm font-semibold text-white group-hover:text-green-400 transition-colors duration-300 hidden sm:inline max-w-20 xs:max-w-24 truncate">{user.name}</span>
-            </button>
+          <Link
+            href="/profile"
+            className="flex items-center gap-1.5 xs:gap-2 rounded-full bg-black/60 hover:bg-neutral-900 border border-neutral-700/40 hover:border-green-500/50 px-1.5 xs:px-2 sm:px-3 py-1 xs:py-1.5 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/20 group"
+            title="User profile"
+          >
+            <div className="h-5 xs:h-6 w-5 xs:w-6 rounded-full bg-neutral-700 overflow-hidden relative flex-shrink-0">
+              {user.avatar && <Image src={user.avatar} alt={user.name} fill className="object-cover" />}
+            </div>
+            <span className="text-[10px] xs:text-xs sm:text-sm font-semibold text-white group-hover:text-green-400 transition-colors duration-300 hidden sm:inline max-w-20 xs:max-w-24 truncate">{user.name}</span>
           </Link>
         ) : isGuest ? (
           <div className="flex items-center gap-1 xs:gap-2 sm:gap-4">
@@ -155,11 +163,13 @@ export function TopBar() {
 interface NavButtonProps {
   children: React.ReactNode;
   tooltip?: string;
+  onClick?: () => void;
 }
 
-function NavButton({ children, tooltip }: NavButtonProps) {
+function NavButton({ children, tooltip, onClick }: NavButtonProps) {
   return (
     <button
+      onClick={onClick}
       className="flex h-7 xs:h-8 sm:h-9 w-7 xs:w-8 sm:w-9 items-center justify-center rounded-full bg-black/40 hover:bg-green-500/20 text-neutral-400 hover:text-green-400 transition-all duration-300 border border-neutral-700/30 hover:border-green-500/50 hover:shadow-lg hover:shadow-green-500/20 group"
       title={tooltip}
     >

@@ -175,6 +175,7 @@ UTILITY CLASSES
 
 /* Glass-morphism effect */
 .glass {
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -183,8 +184,8 @@ UTILITY CLASSES
 /* Gradient text */
 .gradient-text {
   background: linear-gradient(135deg, #1db954 0%, #1ed760 50%, #3b82f6 100%);
-  background-clip: text;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

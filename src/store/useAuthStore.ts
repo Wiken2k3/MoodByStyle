@@ -115,7 +115,7 @@ export const useAuthStore = create<AuthState>()(
           name,
           email,
           password,
-          avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`,
+          avatar: `https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?semt=ais_hybrid&w=740&q=80`,
           createdAt: new Date().toISOString(),
           likedTracks: [],
           playlists: [],
@@ -168,12 +168,13 @@ export const useAuthStore = create<AuthState>()(
         const currentUser = get().user;
         if (!currentUser) return;
 
-        const isLiked = currentUser.likedTracks.includes(trackId);
+        const likedTracks = currentUser.likedTracks ?? [];
+        const isLiked = likedTracks.includes(trackId);
         const updatedUser: UserAccount = {
           ...currentUser,
           likedTracks: isLiked
-            ? currentUser.likedTracks.filter((id) => id !== trackId)
-            : [...currentUser.likedTracks, trackId],
+            ? likedTracks.filter((id) => id !== trackId)
+            : [...likedTracks, trackId],
         };
 
         set((state) => ({
@@ -187,7 +188,7 @@ export const useAuthStore = create<AuthState>()(
       isLiked: (trackId) => {
         const currentUser = get().user;
         if (!currentUser) return false;
-        return currentUser.likedTracks.includes(trackId);
+        return currentUser.likedTracks?.includes(trackId) ?? false;
       },
 
       createPlaylist: (name, description) => {

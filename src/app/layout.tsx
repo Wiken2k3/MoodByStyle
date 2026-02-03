@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import { AppShell } from '@/app/layout/AppShell';
+import { AppShell } from '@/components/layout/AppShell';
 import { SplashScreen } from '@/components/SplashScreen';
 
 const geistSans = Geist({
@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Spotify Clone',
-  description: 'Spotify UI clone with Next.js + Tailwind',
+  title: 'MoodByStyle',
+  description: 'MoodByStyle UI clone with Next.js + Tailwind',
 };
 
 export default function RootLayout({

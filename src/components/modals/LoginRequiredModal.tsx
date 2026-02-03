@@ -26,6 +26,7 @@ export function LoginRequiredModal({
         {/* Close button */}
         <button
           onClick={onClose}
+          title="Close dialog"
           className="absolute top-4 right-4 p-2 hover:bg-neutral-800 rounded-full transition-colors"
         >
           <X size={20} className="text-neutral-400" />

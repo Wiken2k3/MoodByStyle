@@ -1,108 +1,129 @@
 'use client';
 
 import { useParams } from 'next/navigation';
+import { ALBUMS, TRACKS } from '@/constants/albums';
+import { Play, Clock, Heart, MoreHorizontal, Pause } from 'lucide-react';
 import Image from 'next/image';
-import { Play, Heart, Share2 } from 'lucide-react';
-import { ALBUMS } from '@/constants/albums';
-import { TrackRow } from '@/components/TrackRow';
 import { usePlayerStore } from '@/store/usePlayerStore';
 import { useAuthStore } from '@/store/useAuthStore';
+import { LoginRequiredModal } from '@/components/modals/LoginRequiredModal';
+import { useState } from 'react';
 
 export default function AlbumPage() {
   const params = useParams();
-  const albumId = params.id as string;
-  const album = ALBUMS.find((a) => a.id === `album-${albumId}`);
-  const playTrack = usePlayerStore((s) => s.playTrack);
-  const isGuest = useAuthStore((s) => s.isGuest);
+  const id = params.id as string;
+  const { playTrack, currentTrack, isPlaying, togglePlay } = usePlayerStore();
+  const { user } = useAuthStore();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  if (!album) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-white mb-4">Album not found</h1>
-          <p className="text-neutral-400">The album you're looking for doesn't exist.</p>
-        </div>
-      </div>
-    );
-  }
+  // Mock finding album (in real app, fetch from API)
+  const album = ALBUMS.find((a) => a.id === id) || ALBUMS[0];
+  
+  // Mock tracks for this album
+  const albumTracks = TRACKS.slice(0, 8); // Just taking some tracks for demo
 
   const handlePlayAlbum = () => {
-    if (album.tracks.length > 0) {
-      playTrack(album.tracks[0], album.tracks);
+    if (albumTracks.length > 0) {
+      // If currently playing a song from this album, toggle play/pause
+      const isPlayingAlbumTrack = albumTracks.some(t => t.id === currentTrack?.id);
+      if (isPlayingAlbumTrack) {
+        togglePlay();
+      } else {
+        playTrack(albumTracks[0]);
+      }
+    }
+  };
+
+  const handleLike = () => {
+    if (!user) {
+      setIsLoginModalOpen(true);
     }
   };
 
   return (
-    <div className="space-y-8 pb-20">
-      {/* Album Header */}
-      <div className="relative -mx-10 px-10 py-20 bg-gradient-to-b from-green-500/20 via-neutral-900/50 to-black">
-        <div className="flex flex-col md:flex-row gap-8 items-end">
-          {/* Album Cover */}
-          <div className="relative w-56 h-56 rounded-xl overflow-hidden shadow-2xl flex-shrink-0">
-            {album.imageUrl.startsWith('/images') ? (
-              <Image
-                src={album.imageUrl}
-                alt={album.title}
-                fill
-                className="object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-green-500/30 to-blue-500/30 flex items-center justify-center">
-                <span className="text-6xl">🎵</span>
-              </div>
-            )}
-          </div>
-
-          {/* Album Info */}
-          <div className="flex-1 mb-4">
-            <p className="text-sm font-semibold text-neutral-400 mb-2">{album.artist}</p>
-            <h1 className="text-5xl md:text-6xl font-black text-white mb-6">{album.title}</h1>
-            <p className="text-lg text-neutral-300 mb-8">{album.description}</p>
-
-            {/* Action Buttons */}
-            <div className="flex items-center gap-4 flex-wrap">
-              <button
-                onClick={handlePlayAlbum}
-                className="flex items-center gap-3 px-8 py-3 rounded-full bg-green-500 hover:bg-green-400 text-black font-bold transition-all duration-300 hover:scale-105 active:scale-95"
-              >
-                <Play size={20} fill="black" />
-                Play
-              </button>
-              
-              {!isGuest && (
-                <>
-                  <button className="flex items-center justify-center w-12 h-12 rounded-full border border-neutral-400 hover:border-white text-neutral-400 hover:text-white transition-all duration-300">
-                    <Heart size={20} />
-                  </button>
-                  <button className="flex items-center justify-center w-12 h-12 rounded-full border border-neutral-400 hover:border-white text-neutral-400 hover:text-white transition-all duration-300">
-                    <Share2 size={20} />
-                  </button>
-                </>
-              )}
+    <div className="space-y-6 pb-8">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-end gap-6 bg-gradient-to-b from-neutral-700/50 to-black/50 p-6 -mx-3 sm:-mx-6 md:-mx-8 -mt-4 sm:-mt-6 md:-mt-8 lg:-mt-10">
+        <div className="relative h-40 w-40 sm:h-52 sm:w-52 shadow-2xl rounded-lg shrink-0 overflow-hidden">
+          {album.imageUrl ? (
+            <Image src={album.imageUrl} alt={album.title} fill className="object-cover" />
+          ) : (
+            <div className="w-full h-full bg-neutral-800 flex items-center justify-center">
+              <span className="text-4xl">🎵</span>
             </div>
-
-            {/* Album Stats */}
-            <div className="mt-8 text-sm text-neutral-400 space-y-1">
-              <p>{album.tracks.length} songs</p>
+          )}
+        </div>
+        <div className="flex flex-col gap-2 sm:gap-4">
+          <span className="text-xs sm:text-sm font-bold uppercase tracking-wider">Album</span>
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black tracking-tighter">{album.title}</h1>
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-neutral-300">
+            <div className="h-6 w-6 rounded-full bg-neutral-700 overflow-hidden relative">
+               {/* Artist Image Placeholder */}
             </div>
+            <span className="font-bold text-white hover:underline cursor-pointer">{album.artist}</span>
+            <span>•</span>
+            <span>2024</span>
+            <span>•</span>
+            <span>{albumTracks.length} songs</span>
           </div>
         </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-6">
+        <button 
+          onClick={handlePlayAlbum}
+          className="h-14 w-14 rounded-full bg-green-500 hover:bg-green-400 flex items-center justify-center hover:scale-105 transition-all shadow-lg shadow-green-500/20"
+        >
+          {isPlaying && albumTracks.some(t => t.id === currentTrack?.id) ? <Pause size={28} fill="black" className="text-black" /> : <Play size={28} fill="black" className="ml-1 text-black" />}
+        </button>
+        <button onClick={handleLike} className="text-neutral-400 hover:text-white transition-colors">
+          <Heart size={32} />
+        </button>
+        <button className="text-neutral-400 hover:text-white transition-colors">
+          <MoreHorizontal size={32} />
+        </button>
       </div>
 
       {/* Tracks List */}
-      <div className="px-4 sm:px-6 space-y-2">
-        <h2 className="text-2xl font-bold text-white mb-6">Tracks</h2>
-        <div className="space-y-1">
-          {album.tracks.map((track, index) => (
-            <TrackRow
-              key={track.id}
-              index={index + 1}
-              track={track}
-              playlist={album.tracks}
-            />
-          ))}
+      <div className="space-y-2">
+        <div className="grid grid-cols-[16px_1fr_auto] sm:grid-cols-[16px_1fr_1fr_auto] gap-4 px-4 py-2 text-sm text-neutral-400 border-b border-white/10">
+          <span>#</span>
+          <span>Title</span>
+          <span className="hidden sm:block">Artist</span>
+          <Clock size={16} />
         </div>
+        
+        {albumTracks.map((track, index) => (
+          <div
+            key={track.id}
+            onClick={() => playTrack(track)}
+            className="group grid grid-cols-[16px_1fr_auto] sm:grid-cols-[16px_1fr_1fr_auto] gap-4 px-4 py-2 rounded-md hover:bg-white/10 cursor-pointer transition-colors items-center"
+          >
+            <span className={`text-neutral-400 group-hover:text-white ${currentTrack?.id === track.id ? 'text-green-500 font-bold' : ''}`}>
+              {currentTrack?.id === track.id && isPlaying ? (
+                <Image src="https://open.spotifycdn.com/cdn/images/equaliser-animated-green.f93a2ef4.gif" alt="playing" width={14} height={14} />
+              ) : (
+                index + 1
+              )}
+            </span>
+            <div className="min-w-0">
+              <p className={`font-medium truncate transition-colors ${currentTrack?.id === track.id ? 'text-green-500' : 'text-white group-hover:text-green-400'}`}>
+                {track.title}
+              </p>
+              <p className="text-sm text-neutral-400 sm:hidden truncate">{track.artist}</p>
+            </div>
+            <span className="text-sm text-neutral-400 hidden sm:block truncate hover:text-white hover:underline">{track.artist}</span>
+            <span className="text-sm text-neutral-400">3:45</span>
+          </div>
+        ))}
       </div>
+
+      <LoginRequiredModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        message="Log in to save this album to your library."
+      />
     </div>
   );
 }

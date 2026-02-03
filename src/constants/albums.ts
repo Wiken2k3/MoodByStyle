@@ -27,6 +27,7 @@ export const ALBUMS: Album[] = [
         artist: 'LowG',
         duration: '3:20',
         src: '/audio/l2k/In Love.mp3',
+        imageUrl: `/images/l2k.png`,
       },
       {
         id: '3',
@@ -34,6 +35,7 @@ export const ALBUMS: Album[] = [
         artist: 'LowG Ft Tlinh',
         duration: '3:19',
         src: '/audio/l2k/Love Game.mp3',
+        imageUrl: `/images/l2k.png`,
       },
       {
         id: '4',
@@ -41,13 +43,15 @@ export const ALBUMS: Album[] = [
         artist: 'LowG FT Mỹ Anh',
         duration: '3:36',
         src: '/audio/l2k/Peace N Love.mp3',
+        imageUrl: `/images/l2k.png`,
       },
       {
         id: '5',
         title: 'Giải Cứu Mỹ Nhân',
         artist: 'LowG Ft Hoàng Tôn',
         duration: '3:48',
-        src: '/audio/Giải Cứu Mỹ Nhân.mp3',
+        src: '/audio/gcmn.mp3',
+        imageUrl: `/images/l2k.png`,
       },
     ],
   },
@@ -66,6 +70,7 @@ export const ALBUMS: Album[] = [
         artist: 'Wxrdie Ft Justatee',
         duration: '3:45',
         src: '/audio/thewxrdie/Trở Về.mp3',
+        imageUrl: `/images/thewxrdie.png`,
       },
       {
         id: '7',
@@ -73,6 +78,7 @@ export const ALBUMS: Album[] = [
         artist: 'Wxrdie Ft KayC',
         duration: '3:45',
         src: '/audio/thewxrdie/Thèn Choá.mp3',
+        imageUrl: `/images/thewxrdie.png`,
       },
       {
         id: '8',
@@ -80,6 +86,7 @@ export const ALBUMS: Album[] = [
         artist: 'Wxrdie Ft LVK TeuYungBoy Dangrangto',
         duration: '3:45',
         src: '/audio/thewxrdie/Tim Anh Ghen.mp3',
+        imageUrl: `/images/thewxrdie.png`,
       },
     ],
   },
@@ -115,6 +122,7 @@ export const SINGLE_TRACKS: Track[] = [
     artist: 'Min Ft Dangrangto',
     duration: '3:30',
     src: '/audio/cptdsddt.mp3',
+    imageUrl: `/images/cptdsddt.png`,
   },
 ];
 

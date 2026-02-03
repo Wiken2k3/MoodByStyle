@@ -10,12 +10,20 @@ import {
   Shuffle,
   Repeat,
   Repeat1,
+  ListMusic,
+  Mic2,
 } from 'lucide-react';
 import { usePlayerStore } from '@/store/usePlayerStore';
+import Image from 'next/image';
 import type { Track } from '@/store/usePlayerStore';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export function PlayerBar() {
+interface PlayerBarProps {
+  activeView?: string | null;
+  onToggleView?: (view: string) => void;
+}
+
+export function PlayerBar({ activeView, onToggleView }: PlayerBarProps) {
   const {
     currentTrack,
     isPlaying,
@@ -31,10 +39,15 @@ export function PlayerBar() {
   const [volume, setLocalVolume] = useState(0.8);
   const [repeat, setRepeat] = useState<'off' | 'one' | 'all'>('off');
   const [shuffle, setShuffle] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
-  if (!currentTrack) {
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted || !currentTrack) {
     return (
-      <div className="h-20 xs:h-24 sm:h-28 flex items-center justify-center bg-gradient-to-t from-black/80 to-neutral-950/50 border-t border-green-500/10 backdrop-blur-md animate-fadeIn px-3 xs:px-4 sm:px-8">
+      <div suppressHydrationWarning className="h-20 xs:h-24 sm:h-28 flex items-center justify-center bg-gradient-to-t from-black/80 to-neutral-950/50 border-t border-green-500/10 backdrop-blur-md animate-fadeIn px-3 xs:px-4 sm:px-8">
         <p className="text-neutral-400 text-xs xs:text-sm font-medium">Select a track to play</p>
       </div>
     );
@@ -42,16 +55,23 @@ export function PlayerBar() {
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const vol = Number(e.target.value);
-    setLocalVolume(vol);
-    setVolume(vol);
+  const updateVolume = (newVolume: number) => {
+    const clamped = Math.max(0, Math.min(1, newVolume));
+    setLocalVolume(clamped);
+    setVolume(clamped);
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-20 xs:h-24 sm:h-28 bg-black/95 border-t border-white/5 backdrop-blur-xl flex flex-col animate-fadeIn shadow-[0_-10px_40px_rgba(0,0,0,0.5)] z-[100]">
+    <div suppressHydrationWarning className="fixed bottom-0 left-0 right-0 h-20 xs:h-24 sm:h-28 bg-black/95 border-t border-white/5 backdrop-blur-xl flex flex-col animate-fadeIn shadow-[0_-10px_40px_rgba(0,0,0,0.5)] z-[100]">
       {/* Progress Bar */}
-      <div className="absolute top-0 left-0 right-0 h-1 bg-neutral-800/40 hover:h-1.5 transition-all group cursor-pointer overflow-hidden">
+      <div 
+        className="absolute top-0 left-0 right-0 h-1 bg-neutral-800/40 hover:h-1.5 transition-all group cursor-pointer overflow-hidden"
+        onClick={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const percent = (e.clientX - rect.left) / rect.width;
+          seek(Math.max(0, Math.min(1, percent)) * duration);
+        }}
+      >
         <div
           className="h-full bg-green-500 transition-all duration-100 shadow-[0_0_10px_rgba(34,197,94,0.8)]"
           style={{ width: `${progress}%` }}
@@ -86,8 +106,26 @@ export function PlayerBar() {
         />
 
         {/* RIGHT - Volume Control */}
-        <div className="flex items-center justify-end w-[30%]">
-          <PlayerVolumeControl volume={volume} onVolumeChange={handleVolumeChange} />
+        <div className="flex items-center justify-end w-[30%] gap-3 sm:gap-4">
+          <button
+            onClick={() => onToggleView?.('lyrics')}
+            className={`transition-colors hidden sm:block ${
+              activeView === 'lyrics' ? 'text-green-500' : 'text-neutral-400 hover:text-white'
+            }`}
+            title="Lyrics"
+          >
+            <Mic2 size={20} />
+          </button>
+          <button
+            onClick={() => onToggleView?.('queue')}
+            className={`transition-colors hidden sm:block ${
+              activeView === 'queue' ? 'text-green-500' : 'text-neutral-400 hover:text-white'
+            }`}
+            title="Queue"
+          >
+            <ListMusic size={20} />
+          </button>
+          <PlayerVolumeControl volume={volume} onVolumeChange={updateVolume} />
         </div>
       </div>
     </div>
@@ -98,6 +136,13 @@ function PlayerTrackInfo({ track }: { track: Track }) {
   return (
     <div className="flex items-center gap-2 xs:gap-3 min-w-0">
       <div className="h-10 xs:h-12 sm:h-14 w-10 xs:w-12 sm:w-14 rounded-md flex-shrink-0 bg-gradient-to-br from-neutral-800 to-neutral-700 shadow-lg overflow-hidden relative group">
+        <Image 
+          src={track.imageUrl || '/images/music-placeholder.png'} 
+          alt={track.title}
+          fill
+          sizes="(max-width: 640px) 48px, 56px"
+          className="object-cover"
+        />
         <div className="absolute inset-0 bg-green-500/20 opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
       <div className="min-w-0 hidden xs:block">
@@ -227,12 +272,20 @@ function PlayerControls({
 
 interface PlayerVolumeControlProps {
   volume: number;
-  onVolumeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onVolumeChange: (vol: number) => void;
 }
 
 function PlayerVolumeControl({ volume, onVolumeChange }: PlayerVolumeControlProps) {
+  const handleWheel = (e: React.WheelEvent) => {
+    // Prevent default scrolling behavior when hovering over volume control
+    // Note: e.preventDefault() might not work for wheel events in React due to passive listeners, 
+    // but the logic below handles the volume update.
+    const delta = e.deltaY > 0 ? -0.05 : 0.05;
+    onVolumeChange(volume + delta);
+  };
+
   return (
-    <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-3 group/vol min-w-[80px] xs:min-w-[120px] sm:min-w-[150px] justify-end">
+    <div onWheel={handleWheel} className="flex items-center gap-1.5 xs:gap-2 sm:gap-3 group/vol min-w-[80px] xs:min-w-[120px] sm:min-w-[150px] justify-end">
       {volume === 0 ? (
         <VolumeX size={16} className="text-neutral-500 xs:w-5 xs:h-5 sm:w-[18px] sm:h-[18px]" />
       ) : (
@@ -244,7 +297,7 @@ function PlayerVolumeControl({ volume, onVolumeChange }: PlayerVolumeControlProp
         max={1}
         step={0.01}
         value={volume}
-        onChange={onVolumeChange}
+        onChange={(e) => onVolumeChange(Number(e.target.value))}
         className="w-16 xs:w-20 sm:w-24 lg:w-32 h-1 xs:h-1.5 bg-white/10 rounded-full appearance-none cursor-pointer accent-white hover:accent-green-500 transition-all"
         style={{
           background: `linear-gradient(to right, #1db954 0%, #1db954 ${volume * 100}%, #404040 ${volume * 100}%, #404040 100%)`
